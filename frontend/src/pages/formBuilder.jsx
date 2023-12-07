@@ -2,7 +2,7 @@ import $ from "jquery"; //Load jquery
 import React, { createRef, useContext, useEffect, useState } from "react"; //For react component
 import '../App.css'
 // import the react-json-view component
-import ReactJson from 'react-json-view'
+// import ReactJson from 'react-json-view'
 import { MyContext } from "../authContext/dataContext";
 import { Link, json } from "react-router-dom";
 window.jQuery = $; //JQuery alias

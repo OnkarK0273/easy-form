@@ -1,10 +1,12 @@
 import $ from "jquery"; //Load jquery
 import React, { createRef, useContext, useEffect, useState } from "react"; //For react component
 import '../App.css'
-import ReactJson from 'react-json-view'
+// import ReactJson from 'react-json-view'
 import { MyContext } from "../authContext/dataContext";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Toast from "../components/toest";
+import Toast2 from "../components/toast2";
 
 window.jQuery = $; //JQuery alias
 window.$ = $; //JQuery alias
@@ -15,6 +17,8 @@ require("formBuilder/dist/form-render.min.js")
 const FormRender = () => {
     const { form, setForm } = useContext(MyContext);
     const [ output, setOutput] = useState({});
+    const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+    const [isFormSubmitted2, setIsFormSubmitted2] = useState(false);
     const fb = createRef();
     let formRender;
 
@@ -30,6 +34,10 @@ const FormRender = () => {
         setForm(formbuild)
         console.log("trrrr",form)
     }, [])
+
+
+
+
      function saveData() {
       if(Object.keys($(fb.current)?.formRender("userData")).length > 0) {
         setOutput($(fb.current).formRender("userData"))
@@ -37,21 +45,23 @@ const FormRender = () => {
         //   console.log('submit',form)
 
         handleAPI(form)
-      
-      
+        
     }
 
+    
+    
     async function handleAPI(payload){
         try{
-
-            let res = await axios.post("http://localhost:4500/form",payload)
-
+            
+            let res = await axios.post("https://bola-form.onrender.com/form",payload)
             console.log(res.data.msg)
-
+        
+            setIsFormSubmitted(true);
 
         }catch(err){
 
-            console.log(err.response.data)
+            // console.log(err.response.data)
+            setIsFormSubmitted2(true);
 
         }
     }
@@ -69,7 +79,7 @@ const FormRender = () => {
 
         <div className="float-child " >
             {
-                form.length ==0 ?<h1>first Add the quations</h1>:<form className="font-bold w-[400px] border-dashed border-2 p-4" ref={fb}></form>
+                form.length ==0 ?<h1 className="p-2 text-3xl font-mono font-bold underline decoration-wavy" >first Add the quations</h1>:<form className="font-bold w-[400px] border-dashed border-2 p-4" ref={fb}></form>
             }
             
             {Object.keys(form).length > 0 && 
@@ -77,8 +87,9 @@ const FormRender = () => {
               <button
               onClick={saveData}
               type="button"
+              className="p-2 ring-offset-2 ring-2 text-white rounded-lg  bg-indigo-500  ring-blue-300 hover:ring-indigo-800"
               >
-                Submit Data
+                Submit
               </button>
               {/* {Object.keys(output).length > 0 &&
                 <ReactJson src={JSON.parse(JSON.stringify(output))} />
@@ -87,6 +98,8 @@ const FormRender = () => {
             </>
             }
 
+        <Toast message="Form submitted successfully!" show={isFormSubmitted} />
+        <Toast2 message="Error" show={isFormSubmitted2} />
         </div>
         </div>
     )
